@@ -162,7 +162,7 @@ describe('Permission Resolution Core Logic', () => {
     });
   });
 
-  describe('Real-World Permission Scenarios', () => {
+  describe('Permission Scenarios', () => {
     it('Scenario: Exact match beats wildcard', () => {
       const resource = 'wallets/wallet-123';
       

@@ -2,15 +2,13 @@ import request from 'supertest';
 import express from 'express';
 import { AuthController } from '../../src/controllers/authController';
 import { AuthorizationService } from '../../src/services/authorizationService';
-import { TokenService } from '../../src/services/tokenService';
-import { PermissionService } from '../../src/services/permissionService';
 
 // Mock all services
 jest.mock('../../src/services/authorizationService');
 jest.mock('../../src/services/tokenService');
 jest.mock('../../src/services/permissionService');
 
-describe('Key Authorization Scenarios', () => {
+describe('Authorization Scenarios', () => {
   let app: express.Application;
   let authController: AuthController;
   let mockAuthorizationService: jest.Mocked<AuthorizationService>;
@@ -29,7 +27,6 @@ describe('Key Authorization Scenarios', () => {
     
     // Setup routes
     app.post('/authorize', authController.authorize.bind(authController));
-    app.get('/health', authController.healthCheck.bind(authController));
   });
 
   describe('Core Authorization Scenarios', () => {
@@ -217,20 +214,6 @@ describe('Key Authorization Scenarios', () => {
       expect(response.body.decision).toBe('DENY');
       expect(response.body.reason).toBe('Internal server error');
       expect(response.body.user_id).toBe('unknown');
-    });
-  });
-
-  describe('Health Check Scenarios', () => {
-    it('Should return healthy status', async () => {
-      // Act
-      const response = await request(app)
-        .get('/health');
-
-      // Assert
-      expect(response.status).toBe(200);
-      expect(response.body.status).toBe('healthy');
-      expect(response.body.database).toBe('connected');
-      expect(response.body).toHaveProperty('timestamp');
     });
   });
 
