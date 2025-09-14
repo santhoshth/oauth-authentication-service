@@ -102,7 +102,7 @@ export function calculateSpecificityScore(
 
   return [
     resource === matchedResource ? 1 : 0,  // exactness
-    nonWildcardSegments,                    // specificity
-    -wildcardCount                          // negative wildcards
+    nonWildcardSegments,                    // specificity, to prioritize more specific matches
+    -wildcardCount                          // negative wildcards, to prioritize matches with fewer wildcards
   ];
 }
