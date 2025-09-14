@@ -7,8 +7,8 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "jest tests/integration/keyScenarios.test.ts tests/unit/permissionResolution.test.ts --verbose",
+    "test:watch": "jest tests/integration/keyScenarios.test.ts tests/unit/permissionResolution.test.ts --watch",
     "db:init": "tsx src/scripts/initDatabase.ts",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts"

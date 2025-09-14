@@ -33,43 +33,43 @@ export function mapPathToResource(path: string): string {
 
 // Generates all possible resource patterns for wildcard matching 
 export function generateResourcePatterns(resource: string): string[] {
-	const patterns = new Set<string>(); 
-  patterns.add(resource); // Exact match 
-	const segments = resource.split('/');
-	// Generate parent wildcards 
-	for (let i = segments.length - 1; i > 0; i--) {
-		const parentPath = segments.slice(0, i).join('/');
-		patterns.add(`${parentPath}/*`);
-	}
-	// Generate middle wildcards for nested resources 
-	if (segments.length >= 3) {
-		// For paths like wallets/wallet-789/transactions // Generate: wallets/*/transactions 
-		const firstSegment = segments[0];
-		const lastSegment = segments[segments.length - 1];
-		patterns.add(`${firstSegment}/*/${lastSegment}`);
-		// For deeper nesting, generate intermediate patterns 
-		if (segments.length > 3) {
-			for (let i = 1; i < segments.length - 1; i++) {
-				const pattern = segments.map((seg, idx) => idx === i ? '*' : seg).join('/');
-				if (!patterns.has(pattern)) {
-					patterns.add(pattern);
-				}
-			}
-		}
-	}
-	// Add patterns for multi-level wildcards 
-	// e.g., wallets/*/transactions/* for wallets/wallet-789/transactions/txn-123 
-	if (segments.length >= 4) {
-		for (let i = 1; i < segments.length - 2; i++) {
-			const pattern = segments.slice(0, i).concat('*', segments.slice(i + 1, -1), '*').join('/');
-			if (!patterns.has(pattern)) {
-				patterns.add(pattern);
-			}
-		}
-	}
-	// Add global wildcard 
-	patterns.add('*');
-	return Array.from(patterns);
+  const patterns: string[] = [];
+  const segments = resource.split('/');
+  
+  // 1. Exact match (highest priority)
+  patterns.push(resource);
+  
+  // 2. Parent wildcards (wallets/* for wallets/wallet-123)
+  for (let i = segments.length - 1; i > 0; i--) {
+    const parentPath = segments.slice(0, i).join('/');
+    patterns.push(`${parentPath}/*`);
+  }
+  
+  // 3. Middle wildcards (wallets/*/transactions for wallets/wallet-123/transactions)
+  if (segments.length >= 3) {
+    for (let i = 1; i < segments.length - 1; i++) {
+      const pattern = segments.map((seg, idx) => idx === i ? '*' : seg).join('/');
+      patterns.push(pattern);
+    }
+  }
+  
+  // 4. Multi-level wildcards (wallets/*/transactions/* for wallets/wallet-123/transactions/txn-456)
+  if (segments.length >= 4) {
+    // Generate patterns with wildcards in multiple positions
+    for (let i = 1; i < segments.length - 2; i++) {
+      for (let j = i + 2; j < segments.length; j++) {
+        const pattern = segments.map((seg, idx) => 
+          (idx === i || idx === j) ? '*' : seg
+        ).join('/');
+        patterns.push(pattern);
+      }
+    }
+  }
+  
+  // 5. Global wildcard (lowest priority)
+  patterns.push('*');
+  
+  return [...new Set(patterns)];
 }
 
 /**
