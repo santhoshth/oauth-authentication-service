@@ -170,21 +170,5 @@ sequenceDiagram
 
 ---
 
-### 📂 Permission Hierarchy Example
-
-```mermaid
-graph TD
-    A[/wallets/*/] --> B[/wallets/wallet-789/]
-    B --> C[/wallets/wallet-789/transactions/*/]
-    C --> D[/wallets/wallet-789/transactions/txn-456/]
-
-    style A fill:#f9f,stroke:#333,stroke-width:1px
-    style B fill:#bbf,stroke:#333,stroke-width:1px
-    style C fill:#bfb,stroke:#333,stroke-width:1px
-    style D fill:#ffb,stroke:#333,stroke-width:1px
-```
-
----
-
 This document captures the **end-to-end authorization flow**:  
 from token → user → resource → permissions → final decision.
