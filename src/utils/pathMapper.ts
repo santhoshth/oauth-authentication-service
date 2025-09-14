@@ -53,7 +53,7 @@ export function generateResourcePatterns(resource: string): string[] {
     }
   }
   
-  // 4. Multi-level wildcards (wallets/*/transactions/* for wallets/wallet-123/transactions/txn-456)
+  // 4. Multi position wildcards (wallets/*/transactions/* for wallets/wallet-123/transactions/txn-456)
   if (segments.length >= 4) {
     // Generate patterns with wildcards in multiple positions
     for (let i = 1; i < segments.length - 2; i++) {

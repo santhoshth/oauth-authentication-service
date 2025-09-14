@@ -31,8 +31,8 @@ export class PermissionRepository implements IPermissionRepository {
         AND action = ?
         AND resource IN (${placeholders})
       ORDER BY 
-        CASE effect WHEN 'deny' THEN 0 ELSE 1 END,
-        LENGTH(resource) DESC
+        CASE effect WHEN 'deny' THEN 0 ELSE 1 END,  -- DENY first
+        LENGTH(resource) DESC                       -- More specific first
     `;
     
     const stmt = this.db.prepare(query);
