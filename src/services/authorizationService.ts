@@ -7,6 +7,10 @@ import { TokenService } from './tokenService';
 import { PermissionService } from './permissionService';
 import { mapHttpMethodToAction, mapPathToResource } from '../utils/pathMapper';
 import { logger } from '../utils/logger';
+import NodeCache from 'node-cache';
+
+// In-memory cache: key = userId:action:resource, value = AuthorizeResponse
+const authzCache = new NodeCache({ stdTTL: 60, checkperiod: 120 }); // 60s TTL
 
 /**
  * AuthorizationService handles authorization decisions
@@ -51,6 +55,13 @@ export class AuthorizationService implements IAuthorizationService {
       // Map HTTP method to action and path to resource
       const action = mapHttpMethodToAction(request.method);
       const resource = mapPathToResource(request.path);
+
+      const cacheKey = `${userId}:${action}:${resource}`;
+      const cached = authzCache.get<AuthorizeResponse>(cacheKey);
+      if (cached) {
+        logger.info('Authorization result from cache', { userId, action, resource });
+        return cached;
+      }
       
       // Check permissions
       const permissionResult = await this.permissionService.checkPermission(
@@ -72,6 +83,8 @@ export class AuthorizationService implements IAuthorizationService {
           effect: p.effect
         }))
       };
+
+      authzCache.set(cacheKey, response);
 
       return response;
     } catch (error) {
