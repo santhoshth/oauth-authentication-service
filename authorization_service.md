@@ -30,7 +30,11 @@ The `/authorize` API receives a payload:
 3. **Map Method → Action**  
    - Example: `GET → read`, `POST, PUT, PATCH → write`, `DELETE → delete`.
 
-4. **Map Path → Resource**  
+4. **Cache**  
+   - Authorization results are cached in-memory using a key composed of `user_id`, `action`, and `resource`.  
+   - This reduces database lookups for repeated authorization checks with the same parameters and improves
+
+5. **Map Path → Resource**  
    - Normalize the path by removing query params and trailing slashes.  
    - Example: `/wallets/wallet-789/transactions/txn-456` → `wallets/wallet-789/transactions/txn-456`.
 

@@ -12,10 +12,9 @@ import NodeCache from 'node-cache';
 // In-memory cache: key = userId:action:resource, value = AuthorizeResponse
 const authzCache = new NodeCache({ stdTTL: 60, checkperiod: 120 }); // 60s TTL
 
-/**
- * AuthorizationService handles authorization decisions
- * Validates tokens and checks permissions
- */
+
+// AuthorizationService handles authorization decisions
+// Validates tokens and checks permissions
 export class AuthorizationService implements IAuthorizationService {
   private tokenService: TokenService;
   private permissionService: PermissionService;
