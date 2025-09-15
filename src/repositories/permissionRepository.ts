@@ -18,7 +18,7 @@ export class PermissionRepository implements IPermissionRepository {
   ): Promise<MatchedPermission[]> {
     // Generate all possible patterns to match
     const patterns = generateResourcePatterns(resource);
-    console.log('patterns', patterns);
+
     // Build query with placeholders for all patterns
     const placeholders = patterns.map(() => '?').join(',');
     const query = `

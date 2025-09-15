@@ -26,7 +26,7 @@ export class PermissionService implements IPermissionService {
         action,
         resource
       );
-      console.log('matchedPermissions', matchedPermissions);
+
       if (matchedPermissions.length === 0) {
         logger.info('No permissions found for user', {
           userId,
